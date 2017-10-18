@@ -16,7 +16,7 @@ A[is.na(A)] <- 0
 #E.g., 0,1,2,3 are changed to 3,2,1,0
 A[,c(8,9,10)] <- 3 - A[,c(8,9,10)] 
 
-#recode from zero. E.g., the lowest category is 1, not zero. 
+#recode from zero. E.g., in questionnaire,the lowest category is 1, not zero. 
 B <- B - 1
 #or, just for items 2 and 10
 A[,c(2,10)] <- A[,c(2,10)] - 1
