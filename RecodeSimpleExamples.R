@@ -21,3 +21,9 @@ B <- B - 1
 #or, just for items 2 and 10
 A[,c(2,10)] <- A[,c(2,10)] - 1
 
+#recode string variable to numeric variable
+resp$cnt[resp$CNT=="DEU"] <- 1
+resp$cnt[resp$CNT=="TAP"] <- 2
+
+
+
