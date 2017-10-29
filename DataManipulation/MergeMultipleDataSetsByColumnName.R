@@ -1,4 +1,4 @@
-#Read in the data files
+#Read in data files
 setwd("C:\\G_MWU\\R Projects\\BitsAndPieces\\DataManipulation")
 
 #Data files are named "tblBook01.csv", "tblBook02.csv", etc.
