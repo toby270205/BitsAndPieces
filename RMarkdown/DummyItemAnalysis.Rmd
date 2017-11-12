@@ -1,0 +1,87 @@
+---
+title: "Test"
+author: "Margaret"
+date: "31 October 2017"
+output: 
+  html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+#options(encoding = "native.enc")  #to print Chinese
+library(knitr)
+```
+##Introduction
+This is a test of *English as Second Language* for Grade 7 students. This is a pilot test for the purpose of evaluating test items for their psychometric properties so that a final test form can be constructed based on the results of this pilot test. 
+
+The test consists of `r length(mcq)` multiple-choice questions and `r length(key)-length(mcq)` short response questions. Most items are scored dichotomously (0,1) while some items have partial credit scoring (0,1,2).
+
+In total, `r nrow(resp)` students took the test. The test reliability is `r round(alpha,2)`.
+
+<!--- These are for html output file --->
+<style type="text/css">
+.table {
+    width: 40%;
+}
+</style>
+<center>
+
+
+##Classical Test Theory Item Statistics
+```{r results = 'asis', echo=FALSE, warning=FALSE}
+discA <- as.integer(disc*100+0.5)  #these lines are for adding "*" and fixing two decimal places.
+discB <- round(disc,2)
+discB[(discA%%10)==0] <- paste(discB[(discA%%10)==0],"0",sep='')
+discB[disc<0.2] <- paste("*",discB[disc<0.2],sep='')
+itemstats <- data.frame(round(itemdiff,2),discB)
+colnames(itemstats) <- c("Difficulty (%correct)","Discrimination(CTT)")
+```
+##Item difficulty and discrimination 
+```{r echo=FALSE, comment=NA, warning=FALSE}
+#itemstats
+kable(itemstats,align = 'cc') 
+```
+
+##The following is an Item-Person map, also known as the Wright Map
+```{r echo=FALSE, message=FALSE,fig.height=8,fig.width=10}
+library(WrightMap)
+par(ps=14,cex=1.2)  #adjust font size. ps is for axis title's point size. cex enlarges fonts of labels
+  p<-wrightMap(Ability,thr,item.side=itemClassic)
+```
+
+##Item distractor analysis
+```{r echo=FALSE, comment=NA, message=FALSE, warning=FALSE}
+for (i in 1:ncol(resp_raw)){
+  itemi <- ctt_raw[ctt_raw$Item==colnames(resp_raw)[i],]
+  keyc <- rep(" ",length(itemi$Category))
+  if(key[i]!="p"){
+    keyc[paste(itemi$Category)==rep(key[i],length(itemi$Category))] <- "*"
+    itemi$Category <- paste(cname[as.integer(paste(itemi$Category))+1],keyc,sep="")
+   }
+  
+#  print(itemstats[i,])
+#  cat("\n")
+#  print(itemi,row.names=FALSE)  #Or, use kable as below
+
+  print(kable(itemi,row.names = FALSE,align='cccrrrr'))
+  cat("\n")
+}
+```
+## Residual-based item fit statistics
+```{r echo=FALSE, comment=NA, message=FALSE}
+#print(fit)
+kable(fit)
+```
+
+## Plot of Infit mean squares
+```{r echo=FALSE, comment=NA,fig.height=8,fig.width=6,message=FALSE}
+dotchart(fit$Infit, xlim=c(0.5,1.5), labels=fit$item, cex=0.8)
+#abline(v=lower,lty=3)
+abline(v=upper,lty=3)
+```
+
+## The item characteristics curves (observed and expected)
+```{r echo=FALSE,results='hide',bunch_o_figs, fig.height=4,fig.width=6, message=FALSE}
+plot(mod1,fix.devices=TRUE)
+```
+
